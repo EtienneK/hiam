@@ -7,6 +7,7 @@
  */
 
 import knex from 'knex' // eslint-disable-line import/no-unresolved
+import defaultConfig from '../knexfile.js'
 
 const tableName = 'oidc_payloads'
 
@@ -112,14 +113,6 @@ function knexAdapter (client) {
       return this._rows({ id }).update({ consumedAt: new Date() })
     }
   }
-}
-
-const defaultConfig = {
-  client: 'sqlite3',
-  connection: {
-    filename: './db/dev.db'
-  },
-  useNullAsDefault: true
 }
 
 const defaultAdapter = knexAdapter(defaultConfig)
