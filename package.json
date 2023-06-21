@@ -5,7 +5,7 @@
   "description": "See the following examples",
   "main": "koa.js",
   "scripts": {
-    "setup": "./node_modules/.bin/knex migrate:latest",
+    "db:migrate": "./node_modules/.bin/knex migrate:latest",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
