@@ -1,0 +1,31 @@
+{
+  "name": "hiam",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "See the following examples",
+  "main": "koa.js",
+  "scripts": {
+    "setup": "./node_modules/.bin/knex migrate:latest",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/ejs": "^5.1.0",
+    "desm": "^1.3.0",
+    "helmet": "^7.0.0",
+    "knex": "^2.4.2",
+    "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
+    "koa-mount": "^4.0.0",
+    "koa-router": "^12.0.0",
+    "lodash": "^4.17.21",
+    "nanoid": "^4.0.2",
+    "oidc-provider": "^8.2.2",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "standard": "^17.1.0"
+  }
+}
