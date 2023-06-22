@@ -1,0 +1,4 @@
+url: http://localhost:7357
+
+server:
+  port: 7357

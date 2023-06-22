@@ -23,7 +23,7 @@ describe('/oidc', () => {
     it('should return the OIDC discovery document', async () => {
       const res = await agent.get('/oidc/.well-known/openid-configuration').send()
       expect(res.statusCode).eq(200)
-      expect(res.body.issuer).eq('http://localhost:3000')
+      expect(res.body.issuer).eq('http://localhost:7357')
       expect(res.header['content-type']).eq('application/json; charset=utf-8')
     })
   })
