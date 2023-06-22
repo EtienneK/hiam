@@ -1,22 +1,14 @@
-import adapter from './adapter.js'
 import config from 'config'
 
 export default {
-  adapter,
-  clients: [
-    {
-      client_id: 'foo',
-      client_secret: 'bar',
-      redirect_uris: ['http://192.168.1.21:8090/headers']
-    }
-  ],
+  clients: config.get('oidc.clients'),
   interactions: {
     url (ctx, interaction) { // eslint-disable-line no-unused-vars
       return `/interaction/${interaction.uid}`
     }
   },
   cookies: {
-    keys: config.get('oidc.cookies.keys')
+    keys: ['secret1', 'secret2', 'secret3']
   },
   features: {
     devInteractions: { enabled: false },

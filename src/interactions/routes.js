@@ -8,7 +8,7 @@ import isEmpty from 'lodash/isEmpty.js'
 import { koaBody as bodyParser } from 'koa-body'
 import Router from 'koa-router'
 
-import Account from './account.js'
+import Account from '../oidc/account.js'
 import { errors } from 'oidc-provider'
 
 const keys = new Set()

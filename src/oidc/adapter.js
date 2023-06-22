@@ -1,13 +1,4 @@
-/* eslint-disable no-underscore-dangle */
-
-/*
- * Tests, pakcage.json and usage examples can be found here :
- * https://github.com/ydarma/oidc-provider-knex-adapter
- * This code is provided under "The Unlicense"
- */
-
-import knex from 'knex' // eslint-disable-line import/no-unresolved
-import db from '../db/db.js'
+import knex from 'knex'
 
 const tableName = 'oidc_payloads'
 
@@ -115,7 +106,4 @@ function knexAdapter (client) {
   }
 }
 
-const defaultAdapter = knexAdapter(db)
-defaultAdapter.knexAdapter = knexAdapter
-
-export default defaultAdapter
+export default knexAdapter

@@ -1,0 +1,12 @@
+url: http://localhost:3000
+
+server:
+  port: 3000
+  proxy: false
+
+oidc:
+  clients:
+    - client_id: foo
+      client_secret: bar
+      redirect_uris:
+      - http://192.168.1.21:8090/headers
