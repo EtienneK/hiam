@@ -1,4 +1,4 @@
-/* eslint-disable no-console, camelcase, no-unused-vars */
+/* eslint-disable camelcase */
 import { strict as assert } from 'node:assert'
 import * as querystring from 'node:querystring'
 import * as crypto from 'node:crypto'

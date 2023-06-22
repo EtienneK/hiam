@@ -7,7 +7,7 @@
  */
 
 import knex from 'knex' // eslint-disable-line import/no-unresolved
-import db from './db.js'
+import db from '../db/db.js'
 
 const tableName = 'oidc_payloads'
 

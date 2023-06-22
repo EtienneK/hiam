@@ -1,4 +1,4 @@
-import adapter from './db/adapter.js'
+import adapter from './adapter.js'
 import config from 'config'
 
 export default {

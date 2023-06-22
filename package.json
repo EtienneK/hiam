@@ -5,7 +5,7 @@
   "description": "See the following examples",
   "main": "src/server.js",
   "scripts": {
-    "db:migrate": "knex migrate:latest --knexfile ./src/oidc/db/oidc.knexfile.js",
+    "db:migrate": "knex migrate:latest --knexfile ./src/db/knexfile.js",
     "lint": "standard",
     "test": "mocha",
     "test:watch": "mocha --watch --parallel"

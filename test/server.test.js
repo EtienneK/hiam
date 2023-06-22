@@ -2,7 +2,7 @@ import chai, { expect } from 'chai'
 import chaiHttp from 'chai-http'
 
 import server from '../src/server.js'
-import db from '../src/oidc/db/db.js'
+import db from '../src/db/db.js'
 
 chai.use(chaiHttp)
 
