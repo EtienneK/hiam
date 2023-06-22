@@ -1,0 +1,11 @@
+{
+  "oidc": {
+    "cookies": {
+      "keys": [
+        "secret1",
+        "secret2",
+        "secret3"
+      ]
+    }
+  }
+}

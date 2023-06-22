@@ -7,7 +7,7 @@
  */
 
 import knex from 'knex' // eslint-disable-line import/no-unresolved
-import defaultConfig from '../knexfile.js'
+import db from './db.js'
 
 const tableName = 'oidc_payloads'
 
@@ -115,7 +115,7 @@ function knexAdapter (client) {
   }
 }
 
-const defaultAdapter = knexAdapter(defaultConfig)
+const defaultAdapter = knexAdapter(db)
 defaultAdapter.knexAdapter = knexAdapter
 
 export default defaultAdapter

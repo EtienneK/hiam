@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import * as path from 'node:path'
 import { promisify } from 'node:util'
 
@@ -11,10 +9,9 @@ import mount from 'koa-mount'
 
 import Provider from 'oidc-provider'
 
-import Account from './support/account.js'
-import configuration from './support/configuration.js'
-import routes from './routes/koa.js'
-import adapter from './adapters/knex.js'
+import Account from './oidc/account.js'
+import configuration from './oidc/configuration.js'
+import routes from './oidc/routes.js'
 
 const __dirname = dirname(import.meta.url)
 
@@ -68,14 +65,14 @@ if (process.env.NODE_ENV === 'production') {
 
 let server
 try {
-  const provider = new Provider(ISSUER, { adapter, ...configuration })
+  const provider = new Provider(ISSUER, configuration)
 
   app.use(routes(provider).routes())
-  app.use(mount(provider.app))
+  app.use(mount('/oidc', provider.app))
   server = app.listen(PORT, () => {
     console.log(`application is listening on port ${PORT}, check its /.well-known/openid-configuration`)
     console.log('-----')
-    console.log('http://localhost:3000/auth?client_id=foo&response_type=code&code_challenge=1234567890123456789012345678901234567890123&code_challenge_method=S256&scope=openid+email+profile')
+    console.log('http://localhost:3000/oidc/auth?client_id=foo&response_type=code&code_challenge=1234567890123456789012345678901234567890123&code_challenge_method=S256&scope=openid')
   })
 } catch (err) {
   if (server?.listening) server.close()

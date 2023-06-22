@@ -1,4 +1,8 @@
+import adapter from './db/adapter.js'
+import config from 'config'
+
 export default {
+  adapter,
   clients: [
     {
       client_id: 'foo',
@@ -12,20 +16,14 @@ export default {
     }
   },
   cookies: {
-    keys: ['some secret key', 'and also the old rotated away some time ago', 'and one more']
-  },
-  claims: {
-    address: ['address'],
-    email: ['email', 'email_verified'],
-    phone: ['phone_number', 'phone_number_verified'],
-    profile: ['birthdate', 'family_name', 'gender', 'given_name', 'locale', 'middle_name', 'name',
-      'nickname', 'picture', 'preferred_username', 'profile', 'updated_at', 'website', 'zoneinfo']
+    keys: config.get('oidc.cookies.keys')
   },
   features: {
-    devInteractions: { enabled: false }, // defaults to true
-
-    deviceFlow: { enabled: true }, // defaults to false
-    revocation: { enabled: true } // defaults to false
+    devInteractions: { enabled: false },
+    pushedAuthorizationRequests: { enabled: false },
+    resourceIndicators: { enabled: false },
+    rpInitiatedLogout: { enabled: false },
+    userinfo: { enabled: false }
   },
   jwks: {
     keys: [
