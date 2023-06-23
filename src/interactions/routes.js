@@ -42,6 +42,7 @@ export default (provider) => {
   })
 
   router.get('/interaction/:uid', async (ctx, next) => {
+    const XXX = await provider.Session.get(ctx)
     const {
       uid, prompt, params, session
     } = await provider.interactionDetails(ctx.req, ctx.res)

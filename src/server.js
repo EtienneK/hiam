@@ -7,6 +7,7 @@ import Koa from 'koa'
 import render from '@koa/ejs'
 import helmet from 'helmet'
 import mount from 'koa-mount'
+import serve from 'koa-static'
 
 import routes from './interactions/routes.js'
 import provider from './oidc/provider.js'
@@ -39,6 +40,10 @@ render(app, {
   layout: '_layout',
   root: path.join(__dirname, 'views')
 })
+
+console.log(path.join(__dirname, '../node_modules/@picocss/pico/css/pico.min.css'))
+// app.use(mount('/public/css/picocss.min.css', serve(path.join(__dirname, '../node_modules/@picocss/pico/css/pico.min.css'))))
+app.use(mount('/static/css/pico', serve(path.join(__dirname, '../node_modules/@picocss/pico/css'))))
 
 app.use(routes(provider).routes())
 app.use(mount('/oidc', provider.app))

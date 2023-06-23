@@ -103,6 +103,10 @@ function knexAdapter (client) {
     consume (id) {
       return this._rows({ id }).update({ consumedAt: new Date() })
     }
+
+    clean () {
+      return client.table(tableName).where('expiresAt', '<', new Date()).delete()
+    }
   }
 }
 
