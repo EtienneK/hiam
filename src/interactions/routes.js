@@ -1,15 +1,14 @@
 /* eslint-disable camelcase */
 import { strict as assert } from 'node:assert'
 import * as querystring from 'node:querystring'
-import * as crypto from 'node:crypto'
 import { inspect } from 'node:util'
 
 import isEmpty from 'lodash/isEmpty.js'
 import { koaBody as bodyParser } from 'koa-body'
 import Router from 'koa-router'
 
-import Account from '../oidc/account.js'
 import { errors } from 'oidc-provider'
+import loginFactory from './login.js'
 
 const keys = new Set()
 const debug = (obj) => querystring.stringify(Object.entries(obj).reduce((acc, [key, value]) => {
@@ -25,6 +24,7 @@ const { SessionNotFound } = errors
 
 export default (provider) => {
   const router = new Router()
+  const login = loginFactory(provider)
 
   router.use(async (ctx, next) => {
     ctx.set('cache-control', 'no-store')
@@ -42,29 +42,16 @@ export default (provider) => {
   })
 
   router.get('/interaction/:uid', async (ctx, next) => {
-    const XXX = await provider.Session.get(ctx)
     const {
       uid, prompt, params, session
     } = await provider.interactionDetails(ctx.req, ctx.res)
-    const client = await provider.Client.find(params.client_id)
 
     switch (prompt.name) {
       case 'login': {
-        return ctx.render('login', {
-          client,
-          uid,
-          details: prompt.details,
-          params,
-          title: 'Sign-in',
-          google: ctx.google,
-          session: session ? debug(session) : undefined,
-          dbg: {
-            params: debug(params),
-            prompt: debug(prompt)
-          }
-        })
+        return ctx.redirect(`/interaction/${uid}/login`)
       }
       case 'consent': {
+        const client = await provider.Client.find(params.client_id)
         return ctx.render('interaction', {
           client,
           uid,
@@ -83,77 +70,17 @@ export default (provider) => {
     }
   })
 
+  router.all('/interaction/:uid/login', async (ctx, next) => {
+    const {
+      uid, prompt, params
+    } = await provider.interactionDetails(ctx.req, ctx.res)
+    const client = await provider.Client.find(params.client_id)
+    ctx.state.authnSession = { uid, prompt, params, client }
+    return await login(ctx, next)
+  })
+
   const body = bodyParser({
     text: false, json: false, patchNode: true, patchKoa: true
-  })
-
-  router.get('/interaction/callback/google', (ctx) => {
-    const nonce = ctx.res.locals.cspNonce
-    return ctx.render('repost', { layout: false, upstream: 'google', nonce })
-  })
-
-  router.post('/interaction/:uid/login', body, async (ctx) => {
-    const { prompt: { name } } = await provider.interactionDetails(ctx.req, ctx.res)
-    assert.equal(name, 'login')
-
-    const account = await Account.findByLogin(ctx.request.body.login)
-
-    const result = {
-      login: {
-        accountId: account.accountId
-      }
-    }
-
-    return provider.interactionFinished(ctx.req, ctx.res, result, {
-      mergeWithLastSubmission: false
-    })
-  })
-
-  router.post('/interaction/:uid/federated', body, async (ctx) => {
-    const { prompt: { name } } = await provider.interactionDetails(ctx.req, ctx.res)
-    assert.equal(name, 'login')
-
-    const path = `/interaction/${ctx.params.uid}/federated`
-
-    switch (ctx.request.body.upstream) {
-      case 'google': {
-        const callbackParams = ctx.google.callbackParams(ctx.req)
-
-        // init
-        if (!Object.keys(callbackParams).length) {
-          const state = `${ctx.params.uid}|${crypto.randomBytes(32).toString('hex')}`
-          const nonce = crypto.randomBytes(32).toString('hex')
-
-          ctx.cookies.set('google.state', state, { path, sameSite: 'strict' })
-          ctx.cookies.set('google.nonce', nonce, { path, sameSite: 'strict' })
-
-          ctx.status = 303
-          return ctx.redirect(ctx.google.authorizationUrl({
-            state, nonce, scope: 'openid email profile'
-          }))
-        }
-
-        // callback
-        const state = ctx.cookies.get('google.state')
-        ctx.cookies.set('google.state', null, { path })
-        const nonce = ctx.cookies.get('google.nonce')
-        ctx.cookies.set('google.nonce', null, { path })
-
-        const tokenset = await ctx.google.callback(undefined, callbackParams, { state, nonce, response_type: 'id_token' })
-        const account = await Account.findByFederated('google', tokenset.claims())
-
-        const result = {
-          login: {
-            accountId: account.accountId
-          }
-        }
-        return provider.interactionFinished(ctx.req, ctx.res, result, {
-          mergeWithLastSubmission: false
-        })
-      }
-      default:
-        return undefined
-    }
   })
 
   router.post('/interaction/:uid/confirm', body, async (ctx) => {

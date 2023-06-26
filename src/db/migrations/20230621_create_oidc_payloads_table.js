@@ -1,7 +1,7 @@
 export async function up (knex) {
   await knex.schema.createTable('oidc_payloads', t => {
-    t.string('id')
-    t.integer('type')
+    t.string('id').primary()
+    t.integer('type').notNullable()
     t.text('payload')
     t.string('grantId')
     t.string('userCode')

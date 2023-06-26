@@ -1,4 +1,8 @@
 url: http://localhost:3000
+
+admin:
+  email: admin@hiam.local
+
 keys:
   configdb: ch4nge_me_for_Pr0duction!!!@@362184689g
 

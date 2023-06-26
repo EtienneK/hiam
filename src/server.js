@@ -11,6 +11,8 @@ import serve from 'koa-static'
 
 import routes from './interactions/routes.js'
 import provider from './oidc/provider.js'
+import db from './db/db.js'
+import { nanoid } from 'nanoid'
 
 const __dirname = dirname(import.meta.url)
 
@@ -47,6 +49,27 @@ app.use(mount('/static/css/pico', serve(path.join(__dirname, '../node_modules/@p
 
 app.use(routes(provider).routes())
 app.use(mount('/oidc', provider.app))
+
+// Init DB values
+const adminAccount = await db('account').where({ email: config.get('admin.email') }).first()
+if (!adminAccount || adminAccount.password != null) {
+  const adminPassword = nanoid()
+  const timestamp = Date.now()
+  await db('account').insert({
+    id: nanoid(),
+    email: config.get('admin.email'),
+    password: adminPassword,
+    created_at: timestamp,
+    updated_at: timestamp
+  }).onConflict('email').merge(['password', 'updated_at'])
+
+  console.log('================================================================')
+  console.log('Admin first-login credentials')
+  console.log('-----------------------------')
+  console.log(`Email:    ${config.get('admin.email')}`)
+  console.log(`Password: ${adminPassword}`)
+  console.log('================================================================')
+}
 
 let server
 try {
