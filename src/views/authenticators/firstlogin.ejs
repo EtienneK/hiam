@@ -1,0 +1,29 @@
+<article>
+  <p>This is the first time you are trying to sign in and as such no credentials have been
+    registered yet.</p>
+
+  <p>Before credentials can be registered, you will first need to sign in using the
+    configured admin email address and a temporary password.</p>
+
+  <p>The temporary password can be retrieved by copy and pasting from the hiam logs.</p>
+</article>
+
+<form autocomplete="off" action="/interaction/<%= uid %>/login" method="post">
+  <input
+    required
+    type="email"
+    name="email"
+    placeholder="Email"
+    <% if (!params.login_hint) { %>autofocus="on"<% } else { %> value="<%= params.login_hint %>" <% } %>
+  >
+
+  <input
+    required
+    type="password"
+    name="password"
+    placeholder="Password"
+    <% if (params.login_hint) { %>autofocus="on"<% } %>
+  >
+
+  <button type="submit" class="login login-submit">Sign-in</button>
+</form>

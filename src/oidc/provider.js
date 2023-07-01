@@ -15,4 +15,8 @@ const provider = new Provider(
   }
 )
 
+provider.on('server_error', (ctx, error) => {
+  console.error(error)
+})
+
 export default provider

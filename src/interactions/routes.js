@@ -70,14 +70,12 @@ export default (provider) => {
     }
   })
 
-  router.all('/interaction/:uid/login', async (ctx, next) => {
-    const {
-      uid, prompt, params
-    } = await provider.interactionDetails(ctx.req, ctx.res)
+  router.all('/interaction/:uid/login(\\/?)(\\/.*)?', async (ctx, next) => {
+    const { uid, prompt, params, exp } = await provider.interactionDetails(ctx.req, ctx.res)
     const client = await provider.Client.find(params.client_id)
-    ctx.state.authnSession = { uid, prompt, params, client }
-    return await login(ctx, next)
-  })
+    ctx.state.authnSession = { uid, prompt, params, client, expiresIn: exp }
+    return next()
+  }, login)
 
   const body = bodyParser({
     text: false, json: false, patchNode: true, patchKoa: true
@@ -113,7 +111,6 @@ export default (provider) => {
         grant.addResourceScope(indicator, scope.join(' '))
       }
     }
-
     grantId = await grant.save()
 
     const consent = {}

@@ -7,7 +7,7 @@
   "scripts": {
     "db:migrate": "knex migrate:latest --knexfile ./src/db/knexfile.js",
     "lint": "standard",
-    "start": "cross-env NODE_ENV=production node .",
+    "start": "cross-env NODE_ENV=production DEBUG=knex:query node .",
     "test": "cross-env NODE_ENV=test mocha --recursive",
     "test:watch": "cross-env NODE_ENV=test mocha --watch --parallel --recursive"
   },
@@ -17,6 +17,8 @@
   "dependencies": {
     "@koa/ejs": "^5.1.0",
     "@picocss/pico": "^1.5.10",
+    "@simplewebauthn/server": "^7.3.1",
+    "argon2": "^0.30.3",
     "config": "^3.3.9",
     "cryptr": "^6.2.0",
     "desm": "^1.3.0",

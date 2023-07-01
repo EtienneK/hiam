@@ -52,7 +52,7 @@ function knexAdapter (client) {
           uid: payload.uid,
           expiresAt
         })
-        .onConflict(['id'])
+        .onConflict(['id', 'type'])
         .merge()
     }
 
