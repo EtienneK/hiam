@@ -28,12 +28,12 @@ export default function (provider) {
     const state = interactionState?.state
       ? JSON.parse(interactionState.state)
       : {
-          conditions: {},
-          authenticators: {}
-        }
+        conditions: {},
+        authenticators: {}
+      }
 
     let counter = 0
-    async function condition (con) {
+    async function condition(con) {
       const key = con.name + counter
       counter++
 
@@ -44,7 +44,7 @@ export default function (provider) {
       return result
     }
 
-    async function authenticator (authn) {
+    async function authenticator(authn) {
       const key = authn.name + counter
       counter++
 
@@ -59,7 +59,7 @@ export default function (provider) {
       return result
     }
 
-    async function all (authenticators) {
+    async function all(authenticators) {
       let result
       for (const authn of authenticators) {
         result = await authenticator(authn)
@@ -70,9 +70,10 @@ export default function (provider) {
       return result
     }
 
-    const { routerPath } = ctx
-    ctx.routerPath = ctx.path.replace(/\/interaction\/[A-Za-z0-9_-]+\/login/i, '')
+    const { routerPath, path } = ctx
+    ctx.routerPath = path.replace(/\/interaction\/[A-Za-z0-9_-]+\/login/i, '')
     if (ctx.routerPath === '') ctx.routerPath = '/'
+    ctx.path = ctx.routerPath
 
     let result
 
@@ -84,6 +85,7 @@ export default function (provider) {
       ])
     }
     // End Authn Flow
+    ctx.path = path
     ctx.routerPath = routerPath
 
     await db('interaction_state')
