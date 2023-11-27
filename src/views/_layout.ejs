@@ -7,11 +7,18 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <link rel="stylesheet" href="/static/css/pico/pico.min.css">
   <style>
+    :root {
+      --primary: #fdd835 !important;
+      --primary-inverse: rgba(0, 0, 0, 0.75) !important;
+    }
+
     .wrapper {
-      max-width: 600px;
+      max-width: 800px;
     }
   </style>
-  <title><%= title %></title>
+  <title>
+    <%= title %>
+  </title>
 </head>
 
 <body>
@@ -23,16 +30,16 @@
 
     <%- body %>
 
-    <a href="/interaction/<%= uid %>/abort" role="button" class="secondary outline" style="width: 100%;">
-      Cancel
-    </a>
+      <a href="/interaction/<%= uid %>/abort" role="button" class="secondary outline" style="width: 100%;">
+        Cancel
+      </a>
 
-    <% if (client.tosUri) { %>
-    <a href="<%= client.tosUri %>">[ Terms of Service ]</a>
-    <% } %>
-    <% if (client.policyUri) { %>
-    <a href="<%= client.policyUri %>">[ Privacy Policy ]</a>
-    <% } %>
+      <% if (client.tosUri) { %>
+        <a href="<%= client.tosUri %>">[ Terms of Service ]</a>
+      <% } %>
+      <% if (client.policyUri) { %>
+        <a href="<%= client.policyUri %>">[ Privacy Policy ]</a>
+      <% } %>
 
   </main>
 </body>
